@@ -22,6 +22,7 @@
   <ItemGroup>
     <Folder Include="Pages\Home\" />
     <Folder Include="Pages\ColorRequest\" />
+    <Folder Include="Pages\Menus\" />
     <Folder Include="wwwroot\images\colors\" />
   </ItemGroup>
 
