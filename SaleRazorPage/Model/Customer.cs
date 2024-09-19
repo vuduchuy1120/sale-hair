@@ -13,6 +13,8 @@ namespace SaleRazorPage.Model
         public string? District { get; set; }
         public string? Ward { get; set; }
         public string? Note { get; set; }
+        public List<Order>? Orders { get; set; }
+
 
     }
 }

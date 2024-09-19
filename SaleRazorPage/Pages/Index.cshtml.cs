@@ -16,6 +16,18 @@ namespace SaleRazorPage.Pages
             _context = context;
         }
 
+        [BindProperty]
+        public int CategoryId { get; set; }
+
+        [BindProperty]
+        public int Option { get; set; }
+        [BindProperty]
+        public string Search { get; set; }
+        [BindProperty]
+        public bool showAlert { get; set; }
+        [BindProperty]
+        public string alertMessage { get; set; }
+
         public IList<Category> Categories { get; set; }
         public void OnGet()
         {
