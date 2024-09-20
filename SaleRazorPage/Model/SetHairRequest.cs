@@ -10,6 +10,6 @@ namespace SaleRazorPage.Model
         public string? Image { get; set; }
         public string? Color { get; set; }
         public Category Category { get; set; }
-        public List<ColorRequest> ColorRequests { get; set; }
+        public List<OrderDetail>? OrderDetails { get; set; }
     }
 }
