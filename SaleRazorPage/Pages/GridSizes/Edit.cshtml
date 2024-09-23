@@ -1,0 +1,55 @@
+﻿@page
+@model SaleRazorPage.Pages.GridSizes.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>GridSize</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="GridSize.Name" class="control-label"></label>
+                <input asp-for="GridSize.Name" class="form-control" />
+                <span asp-validation-for="GridSize.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GridSize.NameUnAccent" class="control-label"></label>
+                <input asp-for="GridSize.NameUnAccent" class="form-control" />
+                <span asp-validation-for="GridSize.NameUnAccent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GridSize.Size" class="control-label"></label>
+                <input asp-for="GridSize.Size" class="form-control" />
+                <span asp-validation-for="GridSize.Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GridSize.Description" class="control-label"></label>
+                <input asp-for="GridSize.Description" class="form-control" />
+                <span asp-validation-for="GridSize.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GridSize.Image" class="control-label"></label>
+                <input asp-for="GridSize.Image" class="form-control" />
+                <span asp-validation-for="GridSize.Image" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="GridSize.Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

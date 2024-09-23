@@ -8,6 +8,7 @@ namespace SaleRazorPage.Model
         public string? NameUnAccent { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
-        public List<SubTypeColor>? SubTypeColors { get; set; }
+        public List<SubTypeHair>? SubTypeHairs { get; set; }
+        public List<OrderDetail>? OrderDetails { get; set; }
     }
 }

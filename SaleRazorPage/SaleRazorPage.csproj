@@ -21,8 +21,9 @@
 
   <ItemGroup>
     <Folder Include="Pages\Home\" />
-    <Folder Include="Pages\ColorRequest\" />
     <Folder Include="Pages\Menus\" />
+    <Folder Include="Pages\OrderDetails\" />
+    <Folder Include="Pages\Orders\" />
     <Folder Include="wwwroot\images\colors\" />
   </ItemGroup>
 

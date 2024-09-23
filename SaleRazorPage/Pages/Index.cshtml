@@ -1,6 +1,5 @@
 ﻿﻿
 @page
-
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -29,13 +28,15 @@
     </header>
     <form method="post" class="text-center">
         <div class="form-group d-flex justify-content-center align-items-center">
-            <label for="categoryId" class="col-form-label font-weight-bold mb-0">Category</label>
+            <label for="CategoryId" class="col-form-label font-weight-bold mb-0">Loại tóc</label>
             <select asp-for="CategoryId" class="form-control w-25 ms-2" asp-items="ViewBag.CategoryId"></select>
+            <label for="TypeHairId" class="col-form-label font-weight-bold mb-0 ms-5">Kiểu tóc</label>
+            <select asp-for="TypeHairId" class="form-control w-25 ms-2" asp-items="ViewBag.TypeHairId"></select>
         </div>
         <div class="form-group d-flex justify-content-center align-items-center mt-3">
-            <select asp-for="Option" class="form-control w-25 col-form-label me-2 font-weight-bold">
-                <option value="1">Book Name</option>
-                <option value="2">Author</option>
+            <label for="ColorId" class="col-form-label font-weight-bold mb-0 ms-5">Màu tóc</label>
+            <select asp-for="ColorId" class="form-control w-25 col-form-label me-2 font-weight-bold ms-2 " asp-items="ViewBag.ColorId">
+                
             </select>
             <input asp-for="Search" class="form-control w-50 col-form-label me-2" />
             <button class="btn btn-primary" type="submit" style="width:90px">Search</button>

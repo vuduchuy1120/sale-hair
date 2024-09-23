@@ -1,0 +1,53 @@
+﻿@page
+@model SaleRazorPage.Pages.SetHairRequests.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>SetHairRequest</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SetHairRequest.CategoryId" class="control-label"></label>
+                <select asp-for="SetHairRequest.CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SetHairRequest.Name" class="control-label"></label>
+                <input asp-for="SetHairRequest.Name" class="form-control" />
+                <span asp-validation-for="SetHairRequest.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SetHairRequest.Description" class="control-label"></label>
+                <input asp-for="SetHairRequest.Description" class="form-control" />
+                <span asp-validation-for="SetHairRequest.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SetHairRequest.Image" class="control-label"></label>
+                <input asp-for="ImageUpload" class="form-control" type="file" />
+                <span asp-validation-for="ImageUpload" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SetHairRequest.Color" class="control-label"></label>
+                <input asp-for="SetHairRequest.Color" class="form-control" />
+                <span asp-validation-for="SetHairRequest.Color" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

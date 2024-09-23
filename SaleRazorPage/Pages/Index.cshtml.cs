@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SaleRazorPage.Model;
 
 namespace SaleRazorPage.Pages
@@ -17,8 +18,11 @@ namespace SaleRazorPage.Pages
         }
 
         [BindProperty]
-        public int CategoryId { get; set; }
-
+        public Guid CategoryId { get; set; }
+        [BindProperty]
+        public Guid TypeHairId { get; set; }
+        [BindProperty]
+        public Guid ColorId { get; set; }
         [BindProperty]
         public int Option { get; set; }
         [BindProperty]
@@ -29,9 +33,18 @@ namespace SaleRazorPage.Pages
         public string alertMessage { get; set; }
 
         public IList<Category> Categories { get; set; }
+        public IList<TypeHair> TypeHairs { get; set; }
+        public IList<Color> Colors { get; set; }
         public void OnGet()
         {
             Categories = _context.Categories.ToList();
+            ViewData["CategoryId"] = new SelectList(Categories, "Id", "Name");
+
+            TypeHairs = _context.TypeHairs.ToList();
+            ViewData["TypeHairId"] = new SelectList(TypeHairs, "Id", "Name");
+
+            Colors = _context.Colors.ToList();
+            ViewData["ColorId"] = new SelectList(Colors, "Id", "Name");
         }
     }
 }

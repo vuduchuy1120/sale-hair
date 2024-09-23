@@ -1,0 +1,49 @@
+﻿@page
+@model SaleRazorPage.Pages.GridColors.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>GridColor</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GridColor.Code)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GridColor.Code)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GridColor.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GridColor.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GridColor.NameUnAccent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GridColor.NameUnAccent)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GridColor.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GridColor.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GridColor.Image)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GridColor.Image)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.GridColor.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

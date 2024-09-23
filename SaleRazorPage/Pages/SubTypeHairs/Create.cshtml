@@ -1,0 +1,57 @@
+﻿@page
+@model SaleRazorPage.Pages.SubTypeHairs.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>SubTypeHair</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SubTypeHair.TypeHairId" class="control-label"></label>
+                <select asp-for="SubTypeHair.TypeHairId" class ="form-control" asp-items="ViewBag.TypeHairId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubTypeHair.CategoryId" class="control-label"></label>
+                <select asp-for="SubTypeHair.CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubTypeHair.ColorId" class="control-label"></label>
+                <select asp-for="SubTypeHair.ColorId" class ="form-control" asp-items="ViewBag.ColorId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubTypeHair.SubTypeName" class="control-label"></label>
+                <input asp-for="SubTypeHair.SubTypeName" class="form-control" />
+                <span asp-validation-for="SubTypeHair.SubTypeName" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="SubTypeHair.Description" class="control-label"></label>
+                <input asp-for="SubTypeHair.Description" class="form-control" />
+                <span asp-validation-for="SubTypeHair.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubTypeHair.Image" class="control-label"></label>
+                <input asp-for="ImageUpload" class="form-control" type="file" />
+                <span asp-validation-for="ImageUpload" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

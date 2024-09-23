@@ -7,6 +7,6 @@
         public string? NameUnAccent { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
-        public List<OrderDetail> OrderDetails { get; set; }
+        public List<OrderDetail>? OrderDetails { get; set; }
     }
 }

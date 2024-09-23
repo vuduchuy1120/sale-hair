@@ -1,0 +1,66 @@
+﻿@page
+@model SaleRazorPage.Pages.SubTypeHairs.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SubTypeHair[0].SubTypeNameUnAccent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubTypeHair[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubTypeHair[0].Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubTypeHair[0].TypeHair)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubTypeHair[0].Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubTypeHair[0].Color)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.SubTypeHair) {
+        <tr>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.SubTypeNameUnAccent)
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+             <td class="align-middle">
+                <img src="@item.Image" width="200" height="200" />
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.TypeHair.Name)
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+             <td class="align-middle">
+                <div style="width: 100px; height: 100px; background-color: @item.Color.Code; border: 1px solid #000;" title="@item.Color.Name"></div>
+            </td>
+                <td class="align-middle">
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
