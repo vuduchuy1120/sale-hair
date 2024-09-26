@@ -406,11 +406,11 @@
 
     function submitClosureForm() {
         var closureForm = document.getElementById("calculatorClosureForm");
-        var closureFormData = new FormData(closureForm);
+        var formData = new FormData(closureForm);
 
-        fetch('@Url.Page("/Calculators/Index", "CalculateClosure")', {
+        fetch('@Url.Page("/Calculators/Index")', {
             method: 'POST',
-            body: closureFormData,
+            body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
@@ -423,11 +423,13 @@
             })
             .then(data => {
                 if (data.success) {
-                    var tableBody = document.getElementById("resultTableBody");
-                    tableBody.innerHTML = "";
+                    // Reset lại bảng để hiển thị kết quả closure mới
+                    var closureTableBody = document.getElementById("closureResultTableBody");
+                    closureTableBody.innerHTML = "";
 
-                    data.closureResults.forEach((result, index) => {
-                        var row = tableBody.insertRow();
+                    // Lặp qua kết quả từng closure form và thêm vào bảng
+                    data.results.forEach((result, index) => {
+                        var row = closureTableBody.insertRow();
 
                         var cell1 = row.insertCell(0);
                         var cell2 = row.insertCell(1);
@@ -436,25 +438,31 @@
                         var cell5 = row.insertCell(4);
                         var cell6 = row.insertCell(5);
 
-                        cell1.textContent = result.lengthClosure;
+                        cell1.textContent = result.closureType; // Closure hoặc Frontal
                         cell2.textContent = result.quantityClosure;
-                        cell3.textContent = result.quantityPerBundleClosure;
-                        cell4.textContent = result.gridSize;
-                        cell5.textContent = result.price + "$";
+                        cell3.textContent = result.quantityPerBundle;
+                        cell4.textContent = result.lengthClosure;
+                        cell5.textContent = result.gridSize;
+                        cell6.textContent = result.price + "$";
                     });
 
-                    // Thêm tổng giá Closure
-                    var totalRow = tableBody.insertRow();
-                    totalRow.insertCell(0).textContent = "Tổng cộng";
-                    totalRow.insertCell(5).textContent = data.totalPrice + "$";
+                    var totalClosureRow = closureTableBody.insertRow();
+                    totalClosureRow.insertCell(0).textContent = "Tổng cộng";
+                    totalClosureRow.insertCell(1).textContent = "";
+                    totalClosureRow.insertCell(2).textContent = "";
+                    totalClosureRow.insertCell(3).textContent = "";
+                    totalClosureRow.insertCell(4).textContent = "";
+                    totalClosureRow.insertCell(5).textContent = data.totalClosurePrice + "$";
 
-                    document.getElementById("resultSection").classList.remove("hidden");
+                    // Hiển thị bảng kết quả closure
+                    document.getElementById("closureResultSection").classList.remove("hidden");
                 } else {
-                    alert("Error in calculation.");
+                    alert("Error in closure calculation.");
                 }
             })
             .catch(error => console.error('Error:', error));
     }
+
 
 
 </script>
