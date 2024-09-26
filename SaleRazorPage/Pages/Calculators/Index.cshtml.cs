@@ -79,12 +79,12 @@ namespace SaleRazorPage.Pages.Calculators
         }
 
         public async Task<IActionResult> OnPostAsync(
-    List<Guid> SetHairRequestId,
-    List<int> QuantityBundle,
-    List<double> QuantityPerBundle,
-    List<Guid> LengthBundleId,
-    List<Guid> ThicknessId
-)
+            List<Guid> SetHairRequestId,
+            List<int> QuantityBundle,
+            List<double> QuantityPerBundle,
+            List<Guid> LengthBundleId,
+            List<Guid> ThicknessId
+        )
         {
             int totalQuantity = 0;
             decimal totalHairPrice = 0;
@@ -144,6 +144,56 @@ namespace SaleRazorPage.Pages.Calculators
                 totalClosurePrice = totalClosurePrice,
                 totalPrice = totalPrice,
                 results = results
+            });
+        }
+
+        public async Task<IActionResult> OnPostCalculateClosureAsync(
+            List<Guid> LengthClosureId,
+            List<int> QuantityClosure,
+            List<double> QuantityPerBundleClosure,
+            List<Guid> GridSizeId
+        )
+        {
+            decimal totalClosurePrice = 0;
+            List<object> closureResults = new List<object>();
+
+            for (int i = 0; i < LengthClosureId.Count; i++)
+            {
+                // Giả sử bạn có bảng giá cho Closure tương tự như bó tóc
+                var priceRowClosure = await _db.LengthGridSizePrice
+                    .Where(p => p.LengthId == LengthClosureId[i] && p.GridSizeId == GridSizeId[i] && p.IsWholeSale == isWholeSale)
+                    .FirstOrDefaultAsync();
+
+                if (priceRowClosure != null)
+                {
+                    decimal price = priceRowClosure.Price * QuantityClosure[i];
+                    totalClosurePrice += price;
+
+                    // Thu thập thông tin từng closure form
+                    var length = await _db.Lengths.FindAsync(LengthClosureId[i]);
+                    var gridSize = await _db.GridSizes.FindAsync(GridSizeId[i]);
+
+                    closureResults.Add(new
+                    {
+                        LengthClosure = length.Inch,
+                        QuantityClosure = QuantityClosure[i],
+                        QuantityPerBundleClosure = QuantityPerBundleClosure[i],
+                        GridSize = gridSize.Size,
+                        Price = price
+                    });
+                }
+            }
+
+            // Tính tổng giá Closure
+            decimal totalPrice = totalClosurePrice;
+
+            // Trả về JSON response bao gồm thông tin từng closure form
+            return new JsonResult(new
+            {
+                success = true,
+                totalClosurePrice = totalClosurePrice,
+                totalPrice = totalPrice,
+                closureResults = closureResults
             });
         }
 

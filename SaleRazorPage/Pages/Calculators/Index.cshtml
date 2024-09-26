@@ -217,6 +217,25 @@
             </table>
         </div>
 
+        <!-- Bảng kết quả closure -->
+        <div id="closureResultSection" class="alert alert-info hidden">
+            <table class="table table-bordered" id="closureResultTable">
+                <thead>
+                    <tr>
+                        <th>Closure/Frontal</th>
+                        <th>Số lượng bó tóc</th>
+                        <th>Gram mỗi bó</th>
+                        <th>Closure dài (inch)</th>
+                        <th>Lưới size nào</th>
+                        <th>Giá tiền closure</th>
+                    </tr>
+                </thead>
+                <tbody id="closureResultTableBody">
+                    <!-- Các dòng kết quả của closure sẽ được thêm vào đây -->
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </div>
 <script>
@@ -384,6 +403,60 @@
         var closureForm = document.getElementById("calculatorClosureForm");
         closureForm.classList.toggle("hidden");
     });
+
+    function submitClosureForm() {
+        var closureForm = document.getElementById("calculatorClosureForm");
+        var closureFormData = new FormData(closureForm);
+
+        fetch('@Url.Page("/Calculators/Index", "CalculateClosure")', {
+            method: 'POST',
+            body: closureFormData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    var tableBody = document.getElementById("resultTableBody");
+                    tableBody.innerHTML = "";
+
+                    data.closureResults.forEach((result, index) => {
+                        var row = tableBody.insertRow();
+
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        var cell3 = row.insertCell(2);
+                        var cell4 = row.insertCell(3);
+                        var cell5 = row.insertCell(4);
+                        var cell6 = row.insertCell(5);
+
+                        cell1.textContent = result.lengthClosure;
+                        cell2.textContent = result.quantityClosure;
+                        cell3.textContent = result.quantityPerBundleClosure;
+                        cell4.textContent = result.gridSize;
+                        cell5.textContent = result.price + "$";
+                    });
+
+                    // Thêm tổng giá Closure
+                    var totalRow = tableBody.insertRow();
+                    totalRow.insertCell(0).textContent = "Tổng cộng";
+                    totalRow.insertCell(5).textContent = data.totalPrice + "$";
+
+                    document.getElementById("resultSection").classList.remove("hidden");
+                } else {
+                    alert("Error in calculation.");
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+
 </script>
 
 
