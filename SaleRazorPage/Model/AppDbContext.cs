@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SaleRazorPage.Model;
 
 namespace SaleRazorPage.Model
 {
@@ -52,12 +53,20 @@ namespace SaleRazorPage.Model
                 .HasIndex(c => c.Id);
 
             modelBuilder.Entity<SubTypeHair>()
-                .HasKey(c => new { c.ColorId, c.CategoryId, c.TypeHairId, c.SubTypeName});
+                .HasKey(c => new { c.ColorId, c.CategoryId, c.TypeHairId, c.SubTypeName });
 
             modelBuilder.Entity<TypeHair>()
                 .HasIndex(c => c.Id);
-            
+
+            modelBuilder.Entity<LengthGridSizePrice>()
+                .HasKey(lg => new { lg.LengthId, lg.GridSizeId });
+
+            modelBuilder.Entity<LengThicknessPrice>()
+                .HasKey(lt => new { lt.LengthId, lt.ThicknessId });
+
         }
+        public DbSet<SaleRazorPage.Model.LengthGridSizePrice> LengthGridSizePrice { get; set; } = default!;
+        public DbSet<SaleRazorPage.Model.LengThicknessPrice> LengThicknessPrice { get; set; } = default!;
 
     }
 

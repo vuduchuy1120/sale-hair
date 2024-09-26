@@ -6,21 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SaleRazorPage.Model;
-using SaleRazorPage.Utils;
 
 namespace SaleRazorPage.Pages.GridSizes
 {
     public class CreateModel : PageModel
     {
         private readonly SaleRazorPage.Model.AppDbContext _context;
-        private readonly IWebHostEnvironment _environment;
 
-        public CreateModel(SaleRazorPage.Model.AppDbContext context, IWebHostEnvironment environment)
+        public CreateModel(SaleRazorPage.Model.AppDbContext context)
         {
             _context = context;
-            _environment = environment;
         }
-
 
         public IActionResult OnGet()
         {
@@ -29,8 +25,7 @@ namespace SaleRazorPage.Pages.GridSizes
 
         [BindProperty]
         public GridSize GridSize { get; set; } = default!;
-        [BindProperty]
-        public IFormFile? ImageUpload { get; set; }  // Thuộc tính file ảnh
+
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
@@ -38,47 +33,6 @@ namespace SaleRazorPage.Pages.GridSizes
             {
                 return Page();
             }
-            if (ImageUpload != null)
-            {
-                var supportedTypes = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-                var fileExt = Path.GetExtension(ImageUpload.FileName).ToLower();
-
-                // Kiểm tra xem định dạng file có hợp lệ không
-                if (!supportedTypes.Contains(fileExt))
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid file type. Only the following types are supported: .jpg, .jpeg, .png, .gif");
-                    return Page();
-                }
-
-                try
-                {
-                    // Đảm bảo thư mục 'wwwroot/images' tồn tại
-                    var imagesFolder = Path.Combine(_environment.WebRootPath, "images/gird-Sizes");
-                    if (!Directory.Exists(imagesFolder))
-                    {
-                        Directory.CreateDirectory(imagesFolder);
-                    }
-
-                    var fileName = Path.GetFileName(ImageUpload.FileName);
-                    var filePath = Path.Combine(imagesFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await ImageUpload.CopyToAsync(stream);
-                    }
-
-                    // Lưu đường dẫn file vào thuộc tính Image của Size
-                    GridSize.Image = "/images/gird-Sizes/" + fileName;
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError(string.Empty, $"File upload failed: {ex.Message}");
-                    return Page();
-                }
-            }
-
-            GridSize.NameUnAccent = RemoveAccent.RemoveDiacritics(GridSize.Name);
-
 
             _context.GridSizes.Add(GridSize);
             await _context.SaveChangesAsync();

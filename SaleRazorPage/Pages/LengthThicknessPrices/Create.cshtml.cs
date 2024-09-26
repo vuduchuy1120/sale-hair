@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SaleRazorPage.Model;
-using SaleRazorPage.Utils;
 
-namespace SaleRazorPage.Pages.Thicknesses
+namespace SaleRazorPage.Pages.LengthThicknessPrices
 {
     public class CreateModel : PageModel
     {
@@ -21,11 +20,27 @@ namespace SaleRazorPage.Pages.Thicknesses
 
         public IActionResult OnGet()
         {
+        ViewData["LengthId"] = new SelectList(_context.Lengths, "Id", "Inch");
+
+        var thickness = new SelectList(_context.Thickness, "Id", "Name");
+        ViewData["ThicknessId"] = thickness;
+
+        // Set the third GUID from the list as the default selected value (index 2 for zero-based index)
+        var thicknessList = thickness.ToList();
+        if (thicknessList.Count >= 1)
+        {
+            LengThicknessPrice = new LengThicknessPrice
+            {
+                ThicknessId = Guid.Parse(thicknessList[3].Value) // Preselect the third item
+            };
+        }
+
+
             return Page();
         }
 
         [BindProperty]
-        public Thickness Thickness { get; set; } = default!;
+        public LengThicknessPrice LengThicknessPrice { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
@@ -34,9 +49,8 @@ namespace SaleRazorPage.Pages.Thicknesses
             {
                 return Page();
             }
-            Thickness.NameUnAccent = RemoveAccent.RemoveDiacritics(Thickness.Name);
 
-            _context.Thickness.Add(Thickness);
+            _context.LengThicknessPrice.Add(LengThicknessPrice);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Create");

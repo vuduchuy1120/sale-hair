@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SaleRazorPage.Model;
-using SaleRazorPage.Utils;
 
-namespace SaleRazorPage.Pages.Thicknesses
+namespace SaleRazorPage.Pages.LengGridSizePrices
 {
     public class CreateModel : PageModel
     {
@@ -19,13 +18,29 @@ namespace SaleRazorPage.Pages.Thicknesses
             _context = context;
         }
 
+
         public IActionResult OnGet()
         {
+            //ViewData["GridSizeId"] = new SelectList(_context.GridSizes, "Id", "Size");
+            var gridSizes = new SelectList(_context.GridSizes, "Id", "Size");
+            ViewData["GridSizeId"] = gridSizes;
+
+            // Set the third GUID from the list as the default selected value (index 2 for zero-based index)
+            var gridSizeList = gridSizes.ToList();
+            if (gridSizeList.Count >= 3)
+            {
+                LengthGridSizePrice = new LengthGridSizePrice
+                {
+                    GridSizeId =Guid.Parse( gridSizeList[3].Value) // Preselect the third item
+                };
+            }
+
+            ViewData["LengthId"] = new SelectList(_context.Lengths, "Id", "Inch");
             return Page();
         }
 
         [BindProperty]
-        public Thickness Thickness { get; set; } = default!;
+        public LengthGridSizePrice LengthGridSizePrice { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
@@ -34,9 +49,8 @@ namespace SaleRazorPage.Pages.Thicknesses
             {
                 return Page();
             }
-            Thickness.NameUnAccent = RemoveAccent.RemoveDiacritics(Thickness.Name);
 
-            _context.Thickness.Add(Thickness);
+            _context.LengthGridSizePrice.Add(LengthGridSizePrice);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Create");

@@ -8,6 +8,7 @@
         public string? Description { get; set; }
         public string? Image { get; set; }
         public List<CategoryThickness>? CategoryThicknesses { get; set; }
+        public List<LengThicknessPrice>? LengThicknessPrices { get; set; }
 
     }
 }

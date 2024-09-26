@@ -11,18 +11,8 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="GridSize.Name" class="control-label"></label>
-                <input asp-for="GridSize.Name" class="form-control" />
-                <span asp-validation-for="GridSize.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GridSize.NameUnAccent" class="control-label"></label>
-                <input asp-for="GridSize.NameUnAccent" class="form-control" />
-                <span asp-validation-for="GridSize.NameUnAccent" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="GridSize.Size" class="control-label"></label>
                 <input asp-for="GridSize.Size" class="form-control" />
@@ -35,8 +25,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="GridSize.Image" class="control-label"></label>
-                <input asp-for="ImageUpload" class="form-control" type="file" />
-                <span asp-validation-for="ImageUpload" class="text-danger"></span>
+                <input asp-for="GridSize.Image" class="form-control" />
+                <span asp-validation-for="GridSize.Image" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

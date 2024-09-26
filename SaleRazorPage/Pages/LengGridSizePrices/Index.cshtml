@@ -1,0 +1,54 @@
+﻿@page
+@model SaleRazorPage.Pages.LengGridSizePrices.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LengthGridSizePrice[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LengthGridSizePrice[0].IsWholeSale)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LengthGridSizePrice[0].Length)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LengthGridSizePrice[0].GridSize)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.LengthGridSizePrice) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsWholeSale)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Length.Inch)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GridSize.Size)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

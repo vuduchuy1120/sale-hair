@@ -1,0 +1,47 @@
+﻿@page
+@model SaleRazorPage.Pages.LengthThicknessPrices.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>LengThicknessPrice</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LengThicknessPrice.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LengThicknessPrice.Price)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LengThicknessPrice.IsWholeSale)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LengThicknessPrice.IsWholeSale)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LengThicknessPrice.Length)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LengThicknessPrice.Length.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LengThicknessPrice.Thickness)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LengThicknessPrice.Thickness.Id)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="LengThicknessPrice.LengthId" />
+        <input type="hidden" asp-for="LengThicknessPrice.ThicknessId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="./Index">Back to List</a>
+    </form>
+</div>

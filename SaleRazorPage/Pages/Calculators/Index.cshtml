@@ -1,0 +1,389 @@
+﻿@page
+@model SaleRazorPage.Pages.Calculators.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .form-group {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        margin-bottom: 15px;
+        flex-basis: 18%; /* Điều chỉnh để có 2 cột */
+        box-sizing: border-box;
+    }
+
+    .form-group-1 {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        margin-bottom: 15px;
+        flex-basis: 10%; /* Điều chỉnh để có 2 cột */
+        box-sizing: border-box;
+    }
+
+    .form-group-2 {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        margin-bottom: 15px;
+        flex-basis: 15%; /* Điều chỉnh để có 2 cột */
+        box-sizing: border-box;
+    }
+
+    .form-group-3 {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        margin-bottom: 5px;
+        flex-basis: 5%; /* Điều chỉnh để có 2 cột */
+        box-sizing: border-box;
+    }
+
+    label {
+        grid-row: 1;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input, select {
+        grid-row: 2;
+        padding: 8px;
+        font-size: 1rem;
+    }
+
+    .form-group input, .form-group select {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .alert {
+        margin-top: 20px;
+    }
+
+</style>
+
+<h1>Calculator</h1>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form id="calculatorForm" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div id="formSection">
+                <div class="form-row">
+                    <!-- SetHairRequestId -->
+                    <div class="form-group-1">
+                        <label class="control-label">Loại khách đặt</label>
+                        <select name="SetHairRequestId[]" class="form-control" asp-items="ViewBag.SetHairRequestId"></select>
+                    </div>
+
+                    <!-- Quantity Bundle -->
+                    <div class="form-group-1">
+                        <label class="control-label">Số lượng bó tóc</label>
+                        <input name="QuantityBundle[]" type="number" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Số lượng gram trên 1 bó tóc</label>
+                        <input name="QuantityPerBundle[]" class="form-control" />
+                    </div>
+
+                    <!-- LengthBundleId -->
+                    <div class="form-group">
+                        <label class="control-label">Tóc dài bao nhiêu inch</label>
+                        <select name="LengthBundleId[]" class="form-control" asp-items="ViewBag.LengthId"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Dày loại nào</label>
+                        <select name="ThicknessId[]" class="form-control" asp-items="ViewBag.ThicknessId"></select>
+                    </div>
+
+                    <!-- Button Remove -->
+                    <div class="form-group-1">
+                        <label class="control-label">Xoá</label>
+                        <button type="button" class="btn btn-danger remove-form">Xóa</button>
+                    </div>
+
+                    <div class="form-group-1">
+                        <label class="control-label">Thêm</label>
+                        <button type="button" class="btn btn-primary" id="addForm">Add</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Button to add more form rows -->
+            <!-- Submit Button -->
+            <div class="form-group">
+                <input type="button" value="Calculate" class="btn btn-primary" onclick="submitForm()" />
+            </div>
+        </form>
+
+        <!-- Total Price -->
+        <!--
+        <div id="totalPriceSection" class="alert alert-success hidden">
+            <strong>Total Hair Price: </strong><span style="color: red; font-weight: bold" id="totalHairPrice"></span><br />
+            <strong>Total Closure Price: </strong><span style="color: red; font-weight: bold" id="totalClosurePrice"></span><br />
+            <strong>Total Price: </strong><span style="color: red; font-weight: bold" id="totalPrice"></span>
+            <p>Total Quantity: <span id="totalQuantity"></span></p>
+
+        </div>
+
+        -->
+        <!--Ẩn hiện form -->
+        <button class="btn btn-secondary" id="toggleClosureForm">Hiện/Ẩn Closure Form</button>
+
+        <!-- Form closure-->
+        <form id="calculatorClosureForm" class="hidden" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div id="formClosureSection">
+                <div class="form-row">
+                    <!-- SetHairRequestId -->
+                    <div class="form-group-1">
+                        <label class="control-label">Closure/Frontal</label>
+                        <select class="form-control">
+                            <option value="1">Closure</option>
+                            <option value="2">Frontal</option>
+                        </select>
+                    </div>
+
+                    <!-- Quantity Bundle -->
+                    <div class="form-group-1">
+                        <label class="control-label">Số lượng bó tóc</label>
+                        <input name="QuantityClosure[]" type="number" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Số lượng gram trên 1 bó tóc</label>
+                        <input name="QuantityPerBundle[]" class="form-control" />
+                    </div>
+
+                    <!-- LengthBundleId -->
+                    <div class="form-group">
+                        <label class="control-label">Closure bao nhiêu inch</label>
+                        <select name="LengthClosureId[]" class="form-control" asp-items="ViewBag.LengthId"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Lưới size nào</label>
+                        <select name="GridSizeId[]" class="form-control" asp-items="ViewBag.GridSizeId"></select>
+                    </div>
+
+                    <!-- Button Remove -->
+                    <div class="form-group-1">
+                        <label class="control-label">Xoá</label>
+                        <button type="button" class="btn btn-danger remove-form-1">Xóa</button>
+                    </div>
+
+                    <div class="form-group-1">
+                        <label class="control-label">Thêm</label>
+                        <button type="button" class="btn btn-primary" id="addClosureForm">Add</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Button to add more form rows -->
+            <!-- Submit Button -->
+            <div class="form-group">
+                <input type="button" value="CalculateClosure" class="btn btn-primary" onclick="submitClosureForm()" />
+            </div>
+        </form>
+
+        <div id="resultSection" class="alert alert-info hidden">
+            <table class="table table-bordered" id="resultTable">
+                <thead>
+                    <tr>
+                        <th>Loại khách đặt</th>
+                        <th>Số lượng bó tóc</th>
+                        <th>Gram mỗi bó</th>
+                        <th>Tóc dài (inch)</th>
+                        <th>Dày loại nào</th>
+                        <th>Giá tiền bó tóc</th>
+                    </tr>
+                </thead>
+                <tbody id="resultTableBody">
+                    <!-- Các dòng kết quả sẽ được thêm vào đây -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+
+    function submitForm() {
+        var form = document.getElementById("calculatorForm");
+        var formData = new FormData(form);
+
+        fetch('@Url.Page("/Calculators/Index")', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => {
+                // Kiểm tra xem phản hồi có ổn không
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Trả về promise để xử lý tiếp
+            })
+            .then(data => {
+                console.log(data)
+                if (data.success) {
+                    // Reset lại bảng để hiển thị kết quả mới
+                    var tableBody = document.getElementById("resultTableBody");
+                    tableBody.innerHTML = "";
+
+                    // Lặp qua kết quả từng form và thêm vào bảng
+                    data.results.forEach((result, index) => {
+                        var row = tableBody.insertRow();
+
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        var cell3 = row.insertCell(2);
+                        var cell4 = row.insertCell(3);
+                        var cell5 = row.insertCell(4);
+                        var cell6 = row.insertCell(5);
+
+                        cell1.textContent = result.setHairRequestName;
+                        cell2.textContent = result.quantityBundle;
+                        cell3.textContent = result.quantityPerBundle;
+                        cell4.textContent = result.lengthBundle;
+                        cell5.textContent = result.thickness;
+                        cell6.textContent = result.price + "$";
+                    });
+
+                    var totalRow = tableBody.insertRow();
+                    totalRow.insertCell(0).textContent = "Tổng cộng"; // Ô đầu tiên cho tên "Tổng cộng"
+                    totalRow.insertCell(1).textContent = ""; // Ô để trống cho số lượng bó tóc
+                    totalRow.insertCell(2).textContent = ""; // Ô để trống cho gram mỗi bó
+                    totalRow.insertCell(3).textContent = ""; // Ô để trống cho tóc dài
+                    totalRow.insertCell(4).textContent = ""; // Ô để trống cho dày loại nào
+                    totalRow.insertCell(5).textContent = data.totalPrice + "$"; // Hiển thị tổng giá tiền
+
+                    // Hiển thị bảng kết quả
+                    document.getElementById("resultSection").classList.remove("hidden");
+
+                    // Cập nhật tổng giá trị
+                    document.getElementById("totalHairPrice").textContent = data.totalHairPrice + "$";
+                    document.getElementById("totalClosurePrice").textContent = data.totalClosurePrice + "$";
+                    document.getElementById("totalPrice").textContent = data.totalPrice + "$";
+                } else {
+                    alert("Error in calculation.");
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+
+</script>
+<script>
+    // Lấy phần tử chứa các form group
+    const formSection = document.getElementById('formSection');
+    const addFormButton = document.getElementById('addForm');
+
+    // Khi người dùng nhấn nút Add
+    addFormButton.addEventListener('click', function () {
+        // Sao chép phần form-row
+        const newFormRow = formSection.firstElementChild.cloneNode(true);
+
+        // Reset giá trị trong các ô input của form mới
+        const inputs = newFormRow.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (input.tagName === 'SELECT') {
+                input.selectedIndex = 0; // Reset giá trị cho select
+            } else {
+                input.value = ''; // Reset giá trị cho input
+            }
+        });
+
+        // Thêm sự kiện xóa cho nút Remove mới
+        const removeButton = newFormRow.querySelector('.remove-form');
+        removeButton.addEventListener('click', function () {
+            if (formSection.children.length > 1) {
+                newFormRow.remove(); // Xóa form nếu còn nhiều hơn 1
+            } else {
+                alert("Phải có ít nhất một form."); // Thông báo khi chỉ còn một form
+            }
+        });
+
+        // Thêm form-group mới vào cuối phần formSection
+        formSection.appendChild(newFormRow);
+    });
+
+    // Thêm sự kiện xóa cho form-group đầu tiên (mặc định)
+    const initialRemoveButton = formSection.querySelector('.remove-form');
+    initialRemoveButton.addEventListener('click', function () {
+        if (formSection.children.length > 1) {
+            formSection.firstElementChild.remove(); // Xóa form nếu còn nhiều hơn 1
+        } else {
+            alert("Phải có ít nhất một form."); // Thông báo khi chỉ còn một form
+        }
+    });
+</script>
+
+<script>
+    // Lấy phần tử chứa các form group
+    const formClosureSection = document.getElementById('formClosureSection');
+    const addClosureFormButton = document.getElementById('addClosureForm');
+
+    // Khi người dùng nhấn nút Add
+    addClosureFormButton.addEventListener('click', function () {
+        console.log("addClosureFormButton");
+        // Sao chép phần form-row
+        const newClosureFormRow = formClosureSection.firstElementChild.cloneNode(true);
+
+        // Reset giá trị trong các ô input của form mới
+        const closureInputs = newClosureFormRow.querySelectorAll('input, select');
+        closureInputs.forEach(input => {
+            if (input.tagName === 'SELECT') {
+                input.selectedIndex = 0; // Reset giá trị cho select
+            } else {
+                input.value = ''; // Reset giá trị cho input
+            }
+        });
+
+        // Thêm sự kiện xóa cho nút Remove mới
+        const removeClosureButton = newClosureFormRow.querySelector('.remove-form-1');
+        console.log(removeClosureButton);
+        removeClosureButton.addEventListener('click', function () {
+            if (formClosureSection.children.length > 1) {
+                newClosureFormRow.remove(); // Xóa form nếu còn nhiều hơn 1
+            } else {
+                alert("Phải có ít nhất một form."); // Thông báo khi chỉ còn một form
+            }
+        });
+
+        // Thêm form-group mới vào cuối phần formSection
+        formClosureSection.appendChild(newClosureFormRow);
+    });
+
+    // Thêm sự kiện xóa cho form-group đầu tiên (mặc định)
+    const initialClosureRemoveButton = formClosureSection.querySelector('.remove-form-1');
+    initialClosureRemoveButton.addEventListener('click', function () {
+        if (formClosureSection.children.length > 1) {
+            formClosureSection.firstElementChild.remove(); // Xóa form nếu còn nhiều hơn 1
+        } else {
+            alert("Phải có ít nhất một form."); // Thông báo khi chỉ còn một form
+        }
+    });
+
+    document.getElementById('toggleClosureForm').addEventListener('click', function () {
+        var closureForm = document.getElementById("calculatorClosureForm");
+        closureForm.classList.toggle("hidden");
+    });
+</script>
+
+

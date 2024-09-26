@@ -14,12 +14,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.GridSize[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GridSize[0].NameUnAccent)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.GridSize[0].Size)
             </th>
             <th>
@@ -34,12 +28,6 @@
     <tbody>
 @foreach (var item in Model.GridSize) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NameUnAccent)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Size)
             </td>
