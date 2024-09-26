@@ -31,7 +31,7 @@ namespace SaleRazorPage.Pages.LengthThicknessPrices
         {
             LengThicknessPrice = new LengThicknessPrice
             {
-                ThicknessId = Guid.Parse(thicknessList[3].Value) // Preselect the third item
+                ThicknessId = Guid.Parse(thicknessList[2].Value) // Preselect the third item
             };
         }
 

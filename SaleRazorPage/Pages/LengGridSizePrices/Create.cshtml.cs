@@ -31,7 +31,7 @@ namespace SaleRazorPage.Pages.LengGridSizePrices
             {
                 LengthGridSizePrice = new LengthGridSizePrice
                 {
-                    GridSizeId =Guid.Parse( gridSizeList[3].Value) // Preselect the third item
+                    GridSizeId =Guid.Parse( gridSizeList[8].Value) // Preselect the third item
                 };
             }
 

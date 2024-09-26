@@ -16,10 +16,10 @@ namespace SaleRazorPage.Pages.Calculators
         }
 
         [BindProperty]
-        public bool isWholeSale { get; set; } = false;
+        public static bool isWholeSale { get; set; } = false;
 
         [BindProperty]
-        public List<int> QuantityBundle { get; set; } = new List<int>();
+        public List<double> QuantityBundle { get; set; } = new List<double>();
 
         [BindProperty]
         public List<int> QuantityClosure { get; set; } = new List<int>();
@@ -71,7 +71,7 @@ namespace SaleRazorPage.Pages.Calculators
 
             // Fetch Thicknesses
             Thicknesses = await _db.Thickness.ToListAsync() ?? new List<Thickness>();
-            ViewData["ThicknessId"] = new SelectList(Thicknesses, "Id", "Name");
+            ViewData["ThicknessId"] = new SelectList(Thicknesses, "Id", "Name", Thicknesses[3].Id);
 
             // Fetch GridSizes
             GridSizes = await _db.GridSizes.ToListAsync() ?? new List<GridSize>();
@@ -80,20 +80,20 @@ namespace SaleRazorPage.Pages.Calculators
 
         public async Task<IActionResult> OnPostAsync(
             List<Guid> SetHairRequestId,
-            List<int> QuantityBundle,
+            List<double> QuantityBundle,
             List<double> QuantityPerBundle,
             List<Guid> LengthBundleId,
             List<Guid> ThicknessId
         )
         {
-            int totalQuantity = 0;
+            double totalQuantity = 0;
             decimal totalHairPrice = 0;
             decimal totalClosurePrice = 0;
             List<object> results = new List<object>();
 
             for (int i = 0; i < SetHairRequestId.Count; i++)
             {
-                totalQuantity += QuantityBundle[i] * (int)QuantityPerBundle[i];
+                totalQuantity += QuantityBundle[i] * QuantityPerBundle[i];
             }
             if (totalQuantity >= 2000)
             {
@@ -108,12 +108,12 @@ namespace SaleRazorPage.Pages.Calculators
             for (int i = 0; i < SetHairRequestId.Count; i++)
             {
                 var priceRowBundle = await _db.LengThicknessPrice
-                   .Where(p => p.LengthId == LengthBundleId[i] && p.ThicknessId == ThicknessId[i] && p.IsWholeSale == isWholeSale)
+                   .Where(p => p.LengthId == LengthBundleId[i] && p.ThicknessId == ThicknessId[i])
                    .FirstOrDefaultAsync();
 
                 if (priceRowBundle != null)
                 {
-                    decimal price = Decimal.Multiply(priceRowBundle.Price * QuantityBundle[i], (decimal)QuantityPerBundle[i]) / 100;
+                    decimal price = Decimal.Multiply(priceRowBundle.Price * (decimal)QuantityBundle[i], (decimal)QuantityPerBundle[i]) / 100;
                     totalHairPrice += price;
 
                     // Thu thập thông tin từng form
@@ -177,7 +177,7 @@ namespace SaleRazorPage.Pages.Calculators
                     {
                         LengthClosure = length.Inch,
                         QuantityClosure = QuantityClosure[i],
-                        QuantityPerBundleClosure = QuantityPerBundleClosure[i],
+                        QuantityPerBundleClosure = 0,
                         GridSize = gridSize.Size,
                         Price = price
                     });

@@ -71,6 +71,13 @@
         margin-top: 20px;
     }
 
+    #totalPriceSection {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+
 </style>
 
 <h1>Calculator</h1>
@@ -91,18 +98,18 @@
                     <!-- Quantity Bundle -->
                     <div class="form-group-1">
                         <label class="control-label">Số lượng bó tóc</label>
-                        <input name="QuantityBundle[]" type="number" class="form-control" />
+                        <input name="QuantityBundle[]" type="number" tabindex="1" class="form-control" />
                     </div>
 
                     <div class="form-group">
                         <label class="control-label">Số lượng gram trên 1 bó tóc</label>
-                        <input name="QuantityPerBundle[]" class="form-control" />
+                        <input name="QuantityPerBundle[]" value ="100" class="form-control" />
                     </div>
 
                     <!-- LengthBundleId -->
                     <div class="form-group">
                         <label class="control-label">Tóc dài bao nhiêu inch</label>
-                        <select name="LengthBundleId[]" class="form-control" asp-items="ViewBag.LengthId"></select>
+                        <select name="LengthBundleId[]" class="form-control" tabindex="2" asp-items="ViewBag.LengthId"></select>
                     </div>
 
                     <div class="form-group">
@@ -129,17 +136,6 @@
             </div>
         </form>
 
-        <!-- Total Price -->
-        <!--
-        <div id="totalPriceSection" class="alert alert-success hidden">
-            <strong>Total Hair Price: </strong><span style="color: red; font-weight: bold" id="totalHairPrice"></span><br />
-            <strong>Total Closure Price: </strong><span style="color: red; font-weight: bold" id="totalClosurePrice"></span><br />
-            <strong>Total Price: </strong><span style="color: red; font-weight: bold" id="totalPrice"></span>
-            <p>Total Quantity: <span id="totalQuantity"></span></p>
-
-        </div>
-
-        -->
         <!--Ẩn hiện form -->
         <button class="btn btn-secondary" id="toggleClosureForm">Hiện/Ẩn Closure Form</button>
 
@@ -236,6 +232,10 @@
             </table>
         </div>
 
+        <div id="totalPriceSection" class="alert alert-warning hidden">
+            <h4>Tổng giá tiền của tất cả:</h4>
+            <p id="totalPrice">0$</p>
+        </div>
     </div>
 </div>
 <script>
@@ -299,6 +299,16 @@
                     document.getElementById("totalHairPrice").textContent = data.totalHairPrice + "$";
                     document.getElementById("totalClosurePrice").textContent = data.totalClosurePrice + "$";
                     document.getElementById("totalPrice").textContent = data.totalPrice + "$";
+
+                    // Update the total price section
+                    document.getElementById("totalHairPrice").textContent = data.totalHairPrice + "$";
+                    const totalClosurePriceElement = document.getElementById("totalClosurePrice");
+                    const totalClosurePrice = totalClosurePriceElement ? parseFloat(totalClosurePriceElement.textContent) : 0;
+                    const totalCombinedPrice = parseFloat(data.totalHairPrice) + totalClosurePrice;
+
+                    document.getElementById("totalPrice").textContent = totalCombinedPrice + "$";
+                    document.getElementById("totalPriceSection").classList.remove("hidden");
+
                 } else {
                     alert("Error in calculation.");
                 }
@@ -429,7 +439,7 @@
                     closureTableBody.innerHTML = "";
 
                     // Lặp qua kết quả từng closure form và thêm vào bảng
-                    data.results.forEach((result, index) => {
+                    data.closureResults.forEach((result, index) => {
                         var row = closureTableBody.insertRow();
 
                         var cell1 = row.insertCell(0);
@@ -457,14 +467,22 @@
 
                     // Hiển thị bảng kết quả closure
                     document.getElementById("closureResultSection").classList.remove("hidden");
+
+                    // Update the total price section
+                    document.getElementById("totalClosurePrice").textContent = data.totalClosurePrice + "$";
+                    const totalHairPriceElement = document.getElementById("totalHairPrice");
+                    const totalHairPrice = totalHairPriceElement ? parseFloat(totalHairPriceElement.textContent) : 0;
+                    const totalCombinedPrice = totalHairPrice + parseFloat(data.totalClosurePrice);
+
+                    document.getElementById("totalPrice").textContent = totalCombinedPrice + "$";
+                    document.getElementById("totalPriceSection").classList.remove("hidden");
+
                 } else {
                     alert("Error in closure calculation.");
                 }
             })
             .catch(error => console.error('Error:', error));
     }
-
-
 
 </script>
 

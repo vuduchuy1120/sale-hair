@@ -59,10 +59,10 @@ namespace SaleRazorPage.Model
                 .HasIndex(c => c.Id);
 
             modelBuilder.Entity<LengthGridSizePrice>()
-                .HasKey(lg => new { lg.LengthId, lg.GridSizeId });
+                .HasKey(lg => new { lg.LengthId, lg.GridSizeId, lg.IsWholeSale });
 
             modelBuilder.Entity<LengThicknessPrice>()
-                .HasKey(lt => new { lt.LengthId, lt.ThicknessId });
+                .HasKey(lt => new { lt.LengthId, lt.ThicknessId, lt.IsWholeSale });
 
         }
         public DbSet<SaleRazorPage.Model.LengthGridSizePrice> LengthGridSizePrice { get; set; } = default!;
