@@ -9,7 +9,7 @@ services:
         - "8081:8080"
       environment:
         - ASPNETCORE_ENVIRONMENT=Development  # Thêm dòng này để bật chế độ phát triển
-        - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Username=postgres;Password=postgres;Database=postgres
+        - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Username=postgres;Password=postgres;Database=SaleHair
       depends_on:
         - db
       networks:
