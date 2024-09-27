@@ -77,7 +77,6 @@
         font-weight: bold;
     }
 
-
 </style>
 
 <h1>Calculator</h1>
@@ -103,18 +102,23 @@
 
                     <div class="form-group">
                         <label class="control-label">Số lượng gram trên 1 bó tóc</label>
-                        <input name="QuantityPerBundle[]" value ="100" class="form-control" />
+                        <input name="QuantityPerBundle[]" value="100" class="form-control" />
                     </div>
 
                     <!-- LengthBundleId -->
-                    <div class="form-group">
-                        <label class="control-label">Tóc dài bao nhiêu inch</label>
+                    <div class="form-group-1">
+                        <label class="control-label">bao nhiêu inch ? </label>
                         <select name="LengthBundleId[]" class="form-control" tabindex="2" asp-items="ViewBag.LengthId"></select>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label">Dày loại nào</label>
                         <select name="ThicknessId[]" class="form-control" asp-items="ViewBag.ThicknessId"></select>
+                    </div>
+
+                    <div class="form-group-1">
+                        <label class="control-label">Tiền màu/KG</label>
+                        <input name="PriceBundleBonus[]" value="0" class="form-control" />
                     </div>
 
                     <!-- Button Remove -->
@@ -160,11 +164,6 @@
                         <input name="QuantityClosure[]" type="number" class="form-control" />
                     </div>
 
-                    <div class="form-group">
-                        <label class="control-label">Số lượng gram trên 1 bó tóc</label>
-                        <input name="QuantityPerBundle[]" class="form-control" />
-                    </div>
-
                     <!-- LengthBundleId -->
                     <div class="form-group">
                         <label class="control-label">Closure bao nhiêu inch</label>
@@ -174,6 +173,11 @@
                     <div class="form-group">
                         <label class="control-label">Lưới size nào</label>
                         <select name="GridSizeId[]" class="form-control" asp-items="ViewBag.GridSizeId"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Tiền màu /Piece</label>
+                        <input name="PriceClosureBonus[]" value="0" class="form-control" />
                     </div>
 
                     <!-- Button Remove -->
@@ -195,8 +199,8 @@
             </div>
         </form>
 
-        <div id="resultSection" class="alert alert-info hidden">
-            <table class="table table-bordered" id="resultTable">
+        <div id="resultSection" class="alert hidden">
+            <table class="table table-bordered" id="resultTable" style="border: 2px">
                 <thead>
                     <tr>
                         <th>Loại khách đặt</th>
@@ -204,7 +208,9 @@
                         <th>Gram mỗi bó</th>
                         <th>Tóc dài (inch)</th>
                         <th>Dày loại nào</th>
-                        <th>Giá tiền bó tóc</th>
+                        <th>Giá màu</th>
+                        <th>Đơn Giá 1 bó</th>
+                        <th>Thành tiền</th>
                     </tr>
                 </thead>
                 <tbody id="resultTableBody">
@@ -213,17 +219,21 @@
             </table>
         </div>
 
+        <input id="hairPrice" hidden />
+        <input id="closurePrice" hidden />
+
         <!-- Bảng kết quả closure -->
-        <div id="closureResultSection" class="alert alert-info hidden">
-            <table class="table table-bordered" id="closureResultTable">
+        <div id="closureResultSection" class="alert hidden">
+            <table class="table table-bordered" id="closureResultTable" style="border: 2px">
                 <thead>
                     <tr>
                         <th>Closure/Frontal</th>
                         <th>Số lượng bó tóc</th>
-                        <th>Gram mỗi bó</th>
                         <th>Closure dài (inch)</th>
                         <th>Lưới size nào</th>
-                        <th>Giá tiền closure</th>
+                        <th>Tiền màu</th>
+                        <th>Đơn giá 1 bó</th>
+                        <th>Thành tiền</th>
                     </tr>
                 </thead>
                 <tbody id="closureResultTableBody">
@@ -234,7 +244,7 @@
 
         <div id="totalPriceSection" class="alert alert-warning hidden">
             <h4>Tổng giá tiền của tất cả:</h4>
-            <p id="totalPrice">0$</p>
+            <p id="hairPlusClosurePrice">0$</p>
         </div>
     </div>
 </div>
@@ -262,6 +272,7 @@
                 console.log(data)
                 if (data.success) {
                     // Reset lại bảng để hiển thị kết quả mới
+                    console.log(data)
                     var tableBody = document.getElementById("resultTableBody");
                     tableBody.innerHTML = "";
 
@@ -275,39 +286,54 @@
                         var cell4 = row.insertCell(3);
                         var cell5 = row.insertCell(4);
                         var cell6 = row.insertCell(5);
+                        var cell7 = row.insertCell(6);
+                        var cell8 = row.insertCell(7);
 
                         cell1.textContent = result.setHairRequestName;
                         cell2.textContent = result.quantityBundle;
                         cell3.textContent = result.quantityPerBundle;
                         cell4.textContent = result.lengthBundle;
                         cell5.textContent = result.thickness;
-                        cell6.textContent = result.price + "$";
+                        cell6.textContent = result.priceColor + "$";
+                        cell7.textContent = result.unitPrice + "$";
+                        cell8.textContent = result.price + "$";
+
                     });
 
                     var totalRow = tableBody.insertRow();
-                    totalRow.insertCell(0).textContent = "Tổng cộng"; // Ô đầu tiên cho tên "Tổng cộng"
+                    var cell1 = totalRow.insertCell(0);
+                    cell1.textContent = "Tổng cộng"; // Ô đầu tiên cho tên "Tổng cộng"
+                    cell1.style.fontWeight = "bold";  // In đậm chữ
+                    cell1.style.color = "red";
+
                     totalRow.insertCell(1).textContent = ""; // Ô để trống cho số lượng bó tóc
                     totalRow.insertCell(2).textContent = ""; // Ô để trống cho gram mỗi bó
                     totalRow.insertCell(3).textContent = ""; // Ô để trống cho tóc dài
                     totalRow.insertCell(4).textContent = ""; // Ô để trống cho dày loại nào
-                    totalRow.insertCell(5).textContent = data.totalPrice + "$"; // Hiển thị tổng giá tiền
+                    totalRow.insertCell(5).textContent = ""; // Ô để trống cho dày loại nào
+                    totalRow.insertCell(6).textContent = "";
+                    var cell7 = totalRow.insertCell(7);
+                    cell7.textContent = data.totalPrice + "$"; // Hiển thị tổng giá tiền
 
+                    cell7.style.fontWeight = "bold";  // In đậm chữ
+                    cell7.style.color = "red";
+
+                    document.getElementById("hairPrice").value = data.totalPrice;
                     // Hiển thị bảng kết quả
                     document.getElementById("resultSection").classList.remove("hidden");
 
-                    // Cập nhật tổng giá trị
-                    document.getElementById("totalHairPrice").textContent = data.totalHairPrice + "$";
-                    document.getElementById("totalClosurePrice").textContent = data.totalClosurePrice + "$";
-                    document.getElementById("totalPrice").textContent = data.totalPrice + "$";
-
-                    // Update the total price section
-                    document.getElementById("totalHairPrice").textContent = data.totalHairPrice + "$";
-                    const totalClosurePriceElement = document.getElementById("totalClosurePrice");
-                    const totalClosurePrice = totalClosurePriceElement ? parseFloat(totalClosurePriceElement.textContent) : 0;
-                    const totalCombinedPrice = parseFloat(data.totalHairPrice) + totalClosurePrice;
-
-                    document.getElementById("totalPrice").textContent = totalCombinedPrice + "$";
                     document.getElementById("totalPriceSection").classList.remove("hidden");
+
+                    // Lấy giá trị từ các phần tử và chuyển đổi sang số
+                    const closurePrice = parseFloat(document.getElementById("closurePrice").value) || 0;
+                    const hairPrice = parseFloat(document.getElementById("hairPrice").value) || 0;
+
+                    // Cộng hai giá trị
+                    const total = closurePrice + hairPrice;
+
+                    // Cập nhật kết quả với định dạng số tiền
+                    document.getElementById("hairPlusClosurePrice").textContent = total.toFixed(2) + "$";
+
 
                 } else {
                     alert("Error in calculation.");
@@ -332,9 +358,18 @@
         const inputs = newFormRow.querySelectorAll('input, select');
         inputs.forEach(input => {
             if (input.tagName === 'SELECT') {
-                input.selectedIndex = 0; // Reset giá trị cho select
-            } else {
-                input.value = ''; // Reset giá trị cho input
+                if (input.name === "ThicknessId[]") {
+                    input.selectedIndex = 3; // Chọn index 2 cho select "Dày loại nào"
+                } else {
+                    input.selectedIndex = 0; // Chọn index 0 cho các select khác
+                }
+            } else if (input.name === "QuantityPerBundle[]") {
+                input.value = 100; // Đặt giá trị mặc định là 100 cho input "Số lượng gram trên 1 bó tóc"
+            } else if (input.name === "PriceBundleBonus[]") {
+                input.value = 0;
+            }
+            else {
+                input.value = ''; // Reset giá trị cho các input khác
             }
         });
 
@@ -379,7 +414,10 @@
         closureInputs.forEach(input => {
             if (input.tagName === 'SELECT') {
                 input.selectedIndex = 0; // Reset giá trị cho select
-            } else {
+            } else if (input.name === "PriceClosureBonus[]") {
+                input.value = 0; // Đặt giá trị mặc định là 100 cho input "Số lượng gram trên 1 bó tóc"
+            }
+            else {
                 input.value = ''; // Reset giá trị cho input
             }
         });
@@ -448,34 +486,53 @@
                         var cell4 = row.insertCell(3);
                         var cell5 = row.insertCell(4);
                         var cell6 = row.insertCell(5);
+                        var cell7 = row.insertCell(6);
 
-                        cell1.textContent = result.closureType; // Closure hoặc Frontal
+
+                        cell1.textContent = "Closure"; // Closure hoặc Frontal
                         cell2.textContent = result.quantityClosure;
-                        cell3.textContent = result.quantityPerBundle;
-                        cell4.textContent = result.lengthClosure;
-                        cell5.textContent = result.gridSize;
-                        cell6.textContent = result.price + "$";
+                        cell3.textContent = result.lengthClosure;
+                        cell4.textContent = result.gridSize;
+                        cell5.textContent = result.colorPrice + "$";
+                        cell6.textContent = result.unitPrice + "$";
+                        cell7.textContent = result.price + "$";
                     });
 
                     var totalClosureRow = closureTableBody.insertRow();
-                    totalClosureRow.insertCell(0).textContent = "Tổng cộng";
+                    var cell1 = totalClosureRow.insertCell(0);
+                    cell1.textContent = "Tổng cộng";
+                    cell1.style.fontWeight = "bold";  // In đậm chữ
+                    cell1.style.color = "red";
+
+
                     totalClosureRow.insertCell(1).textContent = "";
                     totalClosureRow.insertCell(2).textContent = "";
                     totalClosureRow.insertCell(3).textContent = "";
                     totalClosureRow.insertCell(4).textContent = "";
-                    totalClosureRow.insertCell(5).textContent = data.totalClosurePrice + "$";
+                    totalClosureRow.insertCell(5).textContent = "";
+
+                    var cell6 = totalClosureRow.insertCell(6);
+                    cell6.textContent = data.totalPrice + "$";
+                    cell6.style.fontWeight = "bold";  // In đậm chữ
+                    cell6.style.color = "red";
+
+
+                    document.getElementById("closurePrice").value = data.totalPrice;
 
                     // Hiển thị bảng kết quả closure
                     document.getElementById("closureResultSection").classList.remove("hidden");
 
-                    // Update the total price section
-                    document.getElementById("totalClosurePrice").textContent = data.totalClosurePrice + "$";
-                    const totalHairPriceElement = document.getElementById("totalHairPrice");
-                    const totalHairPrice = totalHairPriceElement ? parseFloat(totalHairPriceElement.textContent) : 0;
-                    const totalCombinedPrice = totalHairPrice + parseFloat(data.totalClosurePrice);
-
-                    document.getElementById("totalPrice").textContent = totalCombinedPrice + "$";
                     document.getElementById("totalPriceSection").classList.remove("hidden");
+
+                    // Lấy giá trị từ các phần tử và chuyển đổi sang số
+                    const closurePrice = parseFloat(document.getElementById("closurePrice").value) || 0;
+                    const hairPrice = parseFloat(document.getElementById("hairPrice").value) || 0;
+
+                    // Cộng hai giá trị
+                    const total = closurePrice + hairPrice;
+
+                    // Cập nhật kết quả với định dạng số tiền
+                    document.getElementById("hairPlusClosurePrice").textContent = total.toFixed(2) + "$";
 
                 } else {
                     alert("Error in closure calculation.");

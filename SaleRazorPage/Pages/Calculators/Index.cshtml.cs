@@ -20,7 +20,10 @@ namespace SaleRazorPage.Pages.Calculators
 
         [BindProperty]
         public List<double> QuantityBundle { get; set; } = new List<double>();
-
+        [BindProperty]
+        public List<double> PriceBundleBonus { get; set; } = new List<double>();
+        [BindProperty]
+        public List<double> PriceClosureBonus { get; set; } = new List<double>();
         [BindProperty]
         public List<int> QuantityClosure { get; set; } = new List<int>();
 
@@ -81,6 +84,7 @@ namespace SaleRazorPage.Pages.Calculators
         public async Task<IActionResult> OnPostAsync(
             List<Guid> SetHairRequestId,
             List<double> QuantityBundle,
+            List<double> PriceBundleBonus,
             List<double> QuantityPerBundle,
             List<Guid> LengthBundleId,
             List<Guid> ThicknessId
@@ -89,6 +93,7 @@ namespace SaleRazorPage.Pages.Calculators
             double totalQuantity = 0;
             decimal totalHairPrice = 0;
             decimal totalClosurePrice = 0;
+            decimal totalBonus= 0;
             List<object> results = new List<object>();
 
             for (int i = 0; i < SetHairRequestId.Count; i++)
@@ -116,6 +121,9 @@ namespace SaleRazorPage.Pages.Calculators
                     decimal price = Decimal.Multiply(priceRowBundle.Price * (decimal)QuantityBundle[i], (decimal)QuantityPerBundle[i]) / 100;
                     totalHairPrice += price;
 
+                    decimal priceColor = Decimal.Multiply((decimal)QuantityBundle[i], (decimal)QuantityPerBundle[i]) * (decimal)PriceBundleBonus[i] / 1000;
+                    totalBonus += priceColor;
+
                     // Thu thập thông tin từng form
                     var setHairRequest = await _db.HairRequests.FindAsync(SetHairRequestId[i]);
                     var length = await _db.Lengths.FindAsync(LengthBundleId[i]);
@@ -128,13 +136,15 @@ namespace SaleRazorPage.Pages.Calculators
                         QuantityPerBundle = QuantityPerBundle[i],
                         LengthBundle = length.Inch,
                         Thickness = thickness.Name,
-                        Price = price
+                        UnitPrice = priceRowBundle.Price,
+                        Price = price,
+                        PriceColor = priceColor,
                     });
                 }
             }
 
             // Tính tổng giá cuối cùng
-            decimal totalPrice = totalHairPrice + totalClosurePrice;
+            decimal totalPrice = totalHairPrice + totalBonus;
 
             // Trả về JSON response bao gồm thông tin từng form
             return new JsonResult(new
@@ -150,11 +160,12 @@ namespace SaleRazorPage.Pages.Calculators
         public async Task<IActionResult> OnPostCalculateClosureAsync(
             List<Guid> LengthClosureId,
             List<int> QuantityClosure,
-            List<double> QuantityPerBundleClosure,
+            List<double> PriceClosureBonus,
             List<Guid> GridSizeId
         )
         {
             decimal totalClosurePrice = 0;
+            decimal totalClosureBonus = 0;
             List<object> closureResults = new List<object>();
 
             for (int i = 0; i < LengthClosureId.Count; i++)
@@ -169,6 +180,9 @@ namespace SaleRazorPage.Pages.Calculators
                     decimal price = priceRowClosure.Price * QuantityClosure[i];
                     totalClosurePrice += price;
 
+                    decimal colorPrice = (decimal)PriceClosureBonus[i] * QuantityClosure[i];
+                    totalClosureBonus += colorPrice;
+
                     // Thu thập thông tin từng closure form
                     var length = await _db.Lengths.FindAsync(LengthClosureId[i]);
                     var gridSize = await _db.GridSizes.FindAsync(GridSizeId[i]);
@@ -178,20 +192,21 @@ namespace SaleRazorPage.Pages.Calculators
                         LengthClosure = length.Inch,
                         QuantityClosure = QuantityClosure[i],
                         QuantityPerBundleClosure = 0,
+                        UnitPrice = priceRowClosure.Price,
                         GridSize = gridSize.Size,
+                        ColorPrice = colorPrice,
                         Price = price
                     });
                 }
             }
 
             // Tính tổng giá Closure
-            decimal totalPrice = totalClosurePrice;
+            decimal totalPrice = totalClosurePrice + totalClosureBonus;
 
             // Trả về JSON response bao gồm thông tin từng closure form
             return new JsonResult(new
             {
                 success = true,
-                totalClosurePrice = totalClosurePrice,
                 totalPrice = totalPrice,
                 closureResults = closureResults
             });
